@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to the BME680 Sensor API will be documented in this file.
+## v3.5.3, 30 Oct 2017
+### Changed
+ - Changed the compensation equation formulae to use shifting operation
+ - Updated the "bme680_get_profile_dur" API
+ - Fixed Checkpatch and made linux compatible
 
+## v3.5.2, 18 Oct 2017
+### Changed
+ - Fixed bug of temperature compensation in pressure
+ 
 ## v3.5.1, 5 Jul 2017
 ### Changed
  - Fixed bug with overwriting of the result with communication results

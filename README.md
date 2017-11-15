@@ -5,11 +5,11 @@ This package contains the Bosch Sensortec's BME680 gas sensor API
 The sensor driver package includes bme680.h, bme680.c and bme680_defs.h files
 
 ## Version
-File | Version | Date
------|---------|-----
-bme680.c |  3.5.1	 | 5 Jul 2017
-bme680.h |  3.5.1	 | 5 Jul 2017
-bme680_defs.h |  3.5.1	 | 5 Jul 2017  
+File          | Version | Date
+--------------|---------|-------------
+bme680.c      |  3.5.3	| 30 Oct 2017
+bme680.h      |  3.5.3	| 30 Oct 2017
+bme680_defs.h |  3.5.3	| 30 Oct 2017  
 
 ## Integration details
 * Integrate bme680.h, bme680_defs.h and bme680.c file in to your project.
@@ -112,7 +112,7 @@ fill in the various parameters as shown below
 		printf("T: %.2f degC, P: %.2f hPa, H %.2f %%rH ", data.temperature / 100.0f,
 			data.pressure / 100.0f, data.humidity / 1000.0f );
 		/* Avoid using measurements from an unstable heating setup */
-		if(data.status & BME680_HEAT_STAB_MSK)
+		if(data.status & BME680_GASM_VALID_MSK)
 			printf(", G: %d ohms", data.gas_resistance);
 		
 		printf("\r\n");

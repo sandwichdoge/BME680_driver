@@ -40,8 +40,8 @@
  * patent rights of the copyright holder.
  *
  * File		bme680_selftest.c
- * @date	5 Jul 2017
- * @version	3.5.1
+ * @date	10 Oct 2017
+ * @version	3.5.2
  *
  */
 
@@ -53,7 +53,7 @@
 #include "bme680_selftest.h"
 
 #define MIN_TEMPERATURE INT16_C(0)		/* 0 degree Celsius */
-#define MAX_TEMPERATURE INT16_C(4000) 	/* 40 degree Celsius */
+#define MAX_TEMPERATURE INT16_C(6000) 	/* 60 degree Celsius */
 
 #define MIN_PRESSURE UINT32_C(90000)	/* 900 hecto Pascals */
 #define MAX_PRESSURE UINT32_C(110000) 	/* 1100 hecto Pascals */
@@ -63,7 +63,7 @@
 
 #define HEATR_DUR	2000
 #define N_MEAS		6
-#define LOW_TEMP	200
+#define LOW_TEMP	150
 #define HIGH_TEMP 	350
 
 /*!
@@ -124,9 +124,9 @@ int8_t bme680_self_test(struct bme680_dev *dev)
 			if (rslt == BME680_OK) {
 
 				if (i % 2 == 0)
-					t_dev.gas_sett.heatr_temp = LOW_TEMP; /* Lower temperature */
-				else
 					t_dev.gas_sett.heatr_temp = HIGH_TEMP; /* Higher temperature */
+				else
+					t_dev.gas_sett.heatr_temp = LOW_TEMP; /* Lower temperature */
 
 				rslt = bme680_set_sensor_settings(settings_sel, &t_dev);
 
@@ -169,15 +169,16 @@ static int8_t analyze_sensor_data(struct bme680_field_data *data, uint8_t n_meas
 		self_test_failed++;
 
 	for (i = 0; i < n_meas; i++) /* Every gas measurement should be valid */
-		if (!(data[i].status & (BME680_GASM_VALID_MSK | BME680_HEAT_STAB_MSK)))
+		if (!(data[i].status & BME680_GASM_VALID_MSK))
 			self_test_failed++;
 
-	for (i = 2; i < n_meas; i += 2) {
-		/* Invert formula to get integer values for centroid resistance, i.e. > 1 */
-		cent_res = (data[i - 2].gas_resistance + data[i].gas_resistance) / (2 * data[i - 1].gas_resistance);
-	}
+	/* 3 cycles heating are completed(HT1/LT1, HT2/LT2,HT3/LT3)
+	   centroid gas ratio = 2*HT3 / (LT2+LT3) < 0.5*/
+	/* Invert formula to get integer values for centroid resistance */
+	if (n_meas >= 6)
+		cent_res = (data[3].gas_resistance + data[5].gas_resistance) / (2 * data[4].gas_resistance);
 
-	if ((cent_res < 3) || (cent_res > 20)) /* 0.05 > cent_res^-1 < 0.03 */
+	if ((cent_res < 2)) /*cent_res^-1 < 0.5 */
 		self_test_failed++;
 
 	if (self_test_failed)

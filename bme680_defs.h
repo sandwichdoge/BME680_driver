@@ -40,8 +40,8 @@
  * patent rights of the copyright holder.
  *
  * @file    bme680_defs.h
- * @date    5 Jul 2017
- * @version 3.5.1
+ * @date	30 Oct 2017
+ * @version	3.5.3
  * @brief
  *
  */
@@ -59,55 +59,36 @@
 /* header includes */
 #ifdef __KERNEL__
 #include <linux/types.h>
+#include <linux/kernel.h>
 #else
 #include <stdint.h>
+#include <stddef.h>
 #endif
 
-#ifdef __KERNEL__
-#if (LONG_MAX) > 0x7fffffff
-#define __have_long64   1
-#elif (LONG_MAX) == 0x7fffffff
-#define __have_long32   1
+/******************************************************************************/
+/*! @name		Common macros					      */
+/******************************************************************************/
+
+#if !defined(UINT8_C) && !defined(INT8_C)
+#define INT8_C(x)       S8_C(x)
+#define UINT8_C(x)      U8_C(x)
 #endif
 
-#if !defined(UINT8_C)
-#define INT8_C(x)       x
-#if (INT_MAX) > 0x7f
-#define UINT8_C(x)      x
-#else
-#define UINT8_C(x)      x##U
-#endif
-#endif
-
-#if !defined(UINT16_C)
-#define INT16_C(x)      x
-#if (INT_MAX) > 0x7fff
-#define UINT16_C(x)     x
-#else
-#define UINT16_C(x)     x##U
-#endif
+#if !defined(UINT16_C) && !defined(INT16_C)
+#define INT16_C(x)      S16_C(x)
+#define UINT16_C(x)     U16_C(x)
 #endif
 
 #if !defined(INT32_C) && !defined(UINT32_C)
-#if __have_long32
-#define INT32_C(x)      x##L
-#define UINT32_C(x)     x##UL
-#else
-#define INT32_C(x)      x
-#define UINT32_C(x)     x##U
-#endif
+#define INT32_C(x)      S32_C(x)
+#define UINT32_C(x)     U32_C(x)
 #endif
 
 #if !defined(INT64_C) && !defined(UINT64_C)
-#if __have_long64
-#define INT64_C(x)      x##L
-#define UINT64_C(x)     x##UL
-#else
-#define INT64_C(x)      x##LL
-#define UINT64_C(x)     x##ULL
+#define INT64_C(x)      S64_C(x)
+#define UINT64_C(x)     U64_C(x)
 #endif
-#endif
-#endif
+
 /**@}*/
 
 /**\name C standard macros */
@@ -221,7 +202,7 @@
 #define BME680_FORCED_MODE	UINT8_C(1)
 
 /** Delay related macro declaration */
-#define BME680_RESET_PERIOD		UINT32_C(10)
+#define BME680_RESET_PERIOD	UINT32_C(10)
 
 /** SPI memory page settings */
 #define BME680_MEM_PAGE0	UINT8_C(0x10)
@@ -250,7 +231,7 @@
 #define BME680_HCNTRL_SEL		UINT16_C(32)
 #define BME680_RUN_GAS_SEL		UINT16_C(64)
 #define BME680_NBCONV_SEL		UINT16_C(128)
-#define BME680_GAS_SENSOR_SEL		UINT16_C(BME680_GAS_MEAS_SEL | BME680_RUN_GAS_SEL | BME680_NBCONV_SEL)
+#define BME680_GAS_SENSOR_SEL		(BME680_GAS_MEAS_SEL | BME680_RUN_GAS_SEL | BME680_NBCONV_SEL)
 
 /** Number of conversion settings*/
 #define BME680_NBCONV_MIN		UINT8_C(0)
@@ -350,10 +331,10 @@
 /*
  * Generic communication function pointer
  * @param[in] dev_id: Place holder to store the id of the device structure
- * 						Can be used to store the index of the Chip select or
- * 						I2C address of the device.
+ *                    Can be used to store the index of the Chip select or
+ *                    I2C address of the device.
  * @param[in] reg_addr:	Used to select the register the where data needs to
- * 						be read from or written to.
+ *                      be read from or written to.
  * @param[in/out] reg_data: Data array to read/write
  * @param[in] len: Length of the data array
  */
@@ -523,6 +504,8 @@ struct	bme680_dev {
 	/*! Communication function result */
 	int8_t com_rslt;
 };
+
+
 
 #endif /* BME680_DEFS_H_ */
 /** @}*/
