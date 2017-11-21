@@ -1,5 +1,14 @@
 # Change Log
 All notable changes to the BME680 Sensor API will be documented in this file.
+
+## v3.5.5, 20 Nov 2017
+### Changed
+ - Updated the buffer size in "get_calib_data" API
+
+## v3.5.4, 16 Nov 2017
+### Changed
+ - Updated the set/get gas profile duration logic
+
 ## v3.5.3, 30 Oct 2017
 ### Changed
  - Changed the compensation equation formulae to use shifting operation
@@ -21,13 +30,11 @@ All notable changes to the BME680 Sensor API will be documented in this file.
  - Updated documentation for the type definitions
  - Removed mode check for get sensor data and setting and getting profile dur
  
-
 ## v3.5.0, 28 Jun 2017
 ### Changed
 - Fixed bug with getting and setting mem pages
 - Changed initialization sequence to be more robust
 - Added additional tries while reading data in case of inadequate delay
-
 
 ## v3.4.0, 8 Jun 2017
 ### Changed
@@ -48,4 +55,3 @@ All notable changes to the BME680 Sensor API will be documented in this file.
 ## v3.2.1, 17 May 2017
 ### Added
 - Took the reference as base version 3.2.1 of BME680 sensor and added.
-

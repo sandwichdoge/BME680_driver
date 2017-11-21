@@ -39,9 +39,9 @@
  * No license is granted by implication or otherwise under any patent or
  * patent rights of the copyright holder.
  *
- * @file    bme680_defs.h
- * @date	30 Oct 2017
- * @version	3.5.3
+ * @file	bme680_defs.h
+ * @date	20 Nov 2017
+ * @version	3.5.5
  * @brief
  *
  */
@@ -111,7 +111,7 @@
 #define BME680_CHIP_ID  UINT8_C(0x61)
 
 /** BME680 coefficients related defines */
-#define BME680_COEFF_SIZE		UINT8_C(0x41)
+#define BME680_COEFF_SIZE		UINT8_C(41)
 #define BME680_COEFF_ADDR1_LEN		UINT8_C(25)
 #define BME680_COEFF_ADDR2_LEN		UINT8_C(16)
 

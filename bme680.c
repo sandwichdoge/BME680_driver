@@ -40,8 +40,8 @@
  * patent rights of the copyright holder.
  *
  * File		bme680.c
- * @date	30 Oct 2017
- * @version	3.5.3
+ * @date	20 Nov 2017
+ * @version	3.5.5
  *
  */
 
@@ -596,9 +596,15 @@ int8_t bme680_get_sensor_mode(struct bme680_dev *dev)
 void bme680_set_profile_dur(uint16_t duration, struct bme680_dev *dev)
 {
 	uint32_t tph_dur; /* Calculate in us */
+	uint32_t meas_cycles;
+	uint8_t os_to_meas_cycles[6] = {0, 1, 2, 4, 8, 16};
+
+	meas_cycles = os_to_meas_cycles[dev->tph_sett.os_temp];
+	meas_cycles += os_to_meas_cycles[dev->tph_sett.os_pres];
+	meas_cycles += os_to_meas_cycles[dev->tph_sett.os_hum];
 
 	/* TPH measurement duration */
-	tph_dur = ((uint32_t) (dev->tph_sett.os_temp + dev->tph_sett.os_pres + dev->tph_sett.os_hum) * UINT32_C(1963));
+	tph_dur = meas_cycles * UINT32_C(1963);
 	tph_dur += UINT32_C(477 * 4); /* TPH switching duration */
 	tph_dur += UINT32_C(477 * 5); /* Gas measurement duration */
 	tph_dur += UINT32_C(500); /* Get it to the closest whole number.*/
@@ -615,9 +621,15 @@ void bme680_set_profile_dur(uint16_t duration, struct bme680_dev *dev)
 void bme680_get_profile_dur(uint16_t *duration, const struct bme680_dev *dev)
 {
 	uint32_t tph_dur; /* Calculate in us */
+	uint32_t meas_cycles;
+	uint8_t os_to_meas_cycles[6] = {0, 1, 2, 4, 8, 16};
+
+	meas_cycles = os_to_meas_cycles[dev->tph_sett.os_temp];
+	meas_cycles += os_to_meas_cycles[dev->tph_sett.os_pres];
+	meas_cycles += os_to_meas_cycles[dev->tph_sett.os_hum];
 
 	/* TPH measurement duration */
-	tph_dur = ((uint32_t) (dev->tph_sett.os_temp + dev->tph_sett.os_pres + dev->tph_sett.os_hum) * UINT32_C(1963));
+	tph_dur = meas_cycles * UINT32_C(1963);
 	tph_dur += UINT32_C(477 * 4); /* TPH switching duration */
 	tph_dur += UINT32_C(477 * 5); /* Gas measurement duration */
 	tph_dur += UINT32_C(500); /* Get it to the closest whole number.*/
