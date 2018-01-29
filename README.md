@@ -7,9 +7,9 @@ The sensor driver package includes bme680.h, bme680.c and bme680_defs.h files
 ## Version
 File          | Version | Date
 --------------|---------|-------------
-bme680.c      |  3.5.5	| 20 Nov 2017
-bme680.h      |  3.5.5	| 20 Nov 2017
-bme680_defs.h |  3.5.5	| 20 Nov 2017  
+bme680.c      |  3.5.6	| 19 Jan 2018
+bme680.h      |  3.5.6	| 19 Jan 2018
+bme680_defs.h |  3.5.6	| 19 Jan 2018  
 
 ## Integration details
 * Integrate bme680.h, bme680_defs.h and bme680.c file in to your project.
@@ -61,6 +61,16 @@ fill in the various parameters as shown below
 	int8_t rslt = BME680_OK;
 	rslt = bme680_init(&gas_sensor);
 ```
+
+Regarding compensation functions for temperature, pressure, humidity and gas we have two implementations.
+
+    - Integer version
+    - floating point version
+
+By default, Integer version is used in the API
+
+If the user needs the floating point version, the user has to un-comment BME680_FLOAT_POINT_COMPENSATION macro 
+in bme680_defs.h file or to add it in the compiler flags.
 
 ### Configuring the sensor
 #### Example for configuring the sensor in forced mode

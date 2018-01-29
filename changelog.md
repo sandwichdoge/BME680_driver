@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the BME680 Sensor API will be documented in this file.
 
+## v3.5.6, 19 Jan 2018
+### Added
+ - Floating point support added for the API
+ - Lower temperature cap removed in "calc_heater_res" APIs
+
 ## v3.5.5, 20 Nov 2017
 ### Changed
  - Updated the buffer size in "get_calib_data" API
