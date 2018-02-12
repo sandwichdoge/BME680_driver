@@ -40,8 +40,8 @@
  * patent rights of the copyright holder.
  *
  * File		bme680.c
- * @date	19 Jan 2018
- * @version	3.5.6
+ * @date	05 Feb 2018
+ * @version	3.5.7
  *
  */
 
@@ -924,7 +924,7 @@ static uint32_t calc_pressure(uint32_t pres_adc, const struct bme680_dev *dev)
 	var1 = ((32768 + var1) * (int32_t)dev->calib.par_p1) >> 15;
 	pressure_comp = 1048576 - pres_adc;
 	pressure_comp = (int32_t)((pressure_comp - (var2 >> 12)) * ((uint32_t)3125));
-	var4 = (INT32_C(1) << 31);
+	var4 = (int32_t)(((uint32_t)1) << 31);
 	if (pressure_comp >= var4)
 		pressure_comp = ((pressure_comp / (uint32_t)var1) << 1);
 	else

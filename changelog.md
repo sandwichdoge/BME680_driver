@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to the BME680 Sensor API will be documented in this file.
 
+## v3.5.7, 05 Feb 2018
+### Fixed
+ - Integer overflow issue fixed in "calc_pressure" API
+
 ## v3.5.6, 19 Jan 2018
 ### Added
  - Floating point support added for the API
