@@ -15,33 +15,12 @@ int fd;
 
 int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
 {
-    int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
-
-    struct i2c_msg i2c_msgs[] = {
-        {
-            .addr = BME680_I2C_ADDR_SECONDARY,
-            .flags = 0,
-            .len = 1,
-            .buf = &reg_addr,
-        },
-        {
-            .addr = BME680_I2C_ADDR_SECONDARY,
-            .flags = I2C_M_RD,
-            .len = len,
-            .buf = reg_data,
-        },
-    };
-
-    struct i2c_rdwr_ioctl_data i2c_xfer = {
-        .msgs = i2c_msgs,
-        .nmsgs = 2,
-    };
-
-    if (ioctl(fd, I2C_RDWR, &i2c_xfer) < 0) {
-        printf("I2C read fail\n");
+    write(fd, &reg_addr, 1);
+    if (read(fd, reg_data, len) < 0) {
+        perror("user_i2c_read");
     }
 
-    return rslt;
+    return 0;
 }
 
 int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
@@ -50,22 +29,8 @@ int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint1
     buffer[0] = reg_addr;
     memcpy(&buffer[1], reg_data, len);
 
-    struct i2c_msg i2c_msgs[] = {
-        {
-            .addr = BME680_I2C_ADDR_SECONDARY,
-            .flags = 0,
-            .len = len + 1,
-            .buf = buffer,
-        },
-    };
-
-    struct i2c_rdwr_ioctl_data i2c_xfer = {
-        .msgs = i2c_msgs,
-        .nmsgs = 1,
-    };
-
-    if (ioctl(fd, I2C_RDWR, &i2c_xfer) < 0) {
-        printf("I2C write fail\n");
+    if (write(fd, buffer, len + 1) < 0) {
+        perror("user_i2c_write");
     }
 
     return 0;
@@ -82,7 +47,7 @@ int main() {
 
     struct bme680_dev gas_sensor;
 
-    gas_sensor.dev_id = BME680_I2C_ADDR_SECONDARY;
+    gas_sensor.dev_id = BME680_I2C_ADDR_PRIMARY;
     gas_sensor.intf = BME680_I2C_INTF;
     gas_sensor.read = user_i2c_read;
     gas_sensor.write = user_i2c_write;
@@ -143,7 +108,7 @@ int main() {
 
     struct bme680_field_data data = {0};
 
-    while(1)
+    for (int i = 0; i < 3; i++)
     {
         user_delay_ms(meas_period); /* Delay till the measurement is ready */
 
@@ -163,6 +128,8 @@ int main() {
             rslt = bme680_set_sensor_mode(&gas_sensor);
         }
     }
+
+    close(fd);
 
     return 0;
 }
